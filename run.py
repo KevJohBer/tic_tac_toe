@@ -1,6 +1,5 @@
 import random
 board = ['.', '.', '.', '.', '.', '.', '.', '.', '.', ]
-playing = True
 
 
 def role_select():
@@ -33,18 +32,22 @@ def choose_place(role):
     """
     Lets user decide where to place their mark.
     """
+    playing = True
     while playing:
-        move = input('Where will you place your mark? ')
+        move = input('\nWhere will you place your mark? ')
         try:
-            move = int(move)
-            if board[int(move)] == '.':
-                board[int(move)] = role.capitalize()
-                create_board()
+            move = int(move) - 1
+            if board[move] == '.':
+                board[move] = role.capitalize()
                 opponent_choose_place(role)
-            elif (move > len(board)) or (move < len(board)):
-                print('Value must be between 0 and 8')
-            else:
-                print(f'{move} is already occupied')
+                create_board()
+            elif (move > 8) or (move < 0):
+                print('Value must be between 1 and 9\n')
+            elif board[move] != '.':
+                print(f'\n{move + 1} is already occupied')
+            elif '.' not in board[0:8]:
+                playing = False
+                print("It's a tie!")
 
         except ValueError:
             print(f'{move} is an invalid input')
@@ -62,7 +65,11 @@ def opponent_choose_place(role):
 
     if board[computer_move] == '.':
         board[computer_move] = computer_role.capitalize()
+        create_board()
         choose_place(role)
+    elif '.' not in board[0:8]:
+        print("It's a tie!\n")
+        playing = False
     else:
         opponent_choose_place(role)
 
