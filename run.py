@@ -1,5 +1,5 @@
 import random
-board = ['.', '.', '.', '.', '.', '.', '.', '.', '.', ]
+board = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
 
 
 def role_select():
@@ -32,25 +32,22 @@ def choose_place(role):
     """
     Lets user decide where to place their mark.
     """
-    playing = True
-    while playing:
+    while '.' in board:
+        check_winner(role)
         move = input('\nWhere will you place your mark? ')
         try:
             move = int(move) - 1
             if board[move] == '.':
                 board[move] = role.capitalize()
                 opponent_choose_place(role)
-                create_board()
             elif (move > 8) or (move < 0):
                 print('Value must be between 1 and 9\n')
             elif board[move] != '.':
                 print(f'\n{move + 1} is already occupied')
-            elif '.' not in board[0:8]:
-                playing = False
-                print("It's a tie!")
-
         except ValueError:
             print(f'{move} is an invalid input')
+    if '.' not in board:
+        print("It's a tie!")
 
 
 def opponent_choose_place(role):
@@ -66,12 +63,20 @@ def opponent_choose_place(role):
     if board[computer_move] == '.':
         board[computer_move] = computer_role.capitalize()
         create_board()
-        choose_place(role)
-    elif '.' not in board[0:8]:
-        print("It's a tie!\n")
-        playing = False
+    elif '.' not in board:
+        create_board()
     else:
         opponent_choose_place(role)
+    check_winner(computer_role)
+
+
+def check_winner(role):
+    """
+    Checks if the board has a winner
+    """
+    for a, b, c in [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]:
+        if role.capitalize() == board[a] == board[b] == board[c]:
+            print(f'\n{role.capitalize()} wins!')
 
 
 def main():
