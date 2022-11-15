@@ -32,14 +32,20 @@ def choose_place(role):
     """
     Lets user decide where to place their mark.
     """
-    while '.' in board:
-        check_winner(role)
+    playing = True
+    while playing:
+        for a, b, c in [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]:
+            if role.capitalize() == board[a] == board[b] == board[c]:
+                print(f'\n{role.capitalize()} wins!')
+                playing = False
+                return playing
+
         move = input('\nWhere will you place your mark? ')
         try:
             move = int(move) - 1
             if board[move] == '.':
                 board[move] = role.capitalize()
-                opponent_choose_place(role)
+                opponent_choose_place(role, playing)
             elif (move > 8) or (move < 0):
                 print('Value must be between 1 and 9\n')
             elif board[move] != '.':
@@ -50,7 +56,7 @@ def choose_place(role):
         print("It's a tie!")
 
 
-def opponent_choose_place(role):
+def opponent_choose_place(role, playing):
     """
     Makes computer do a move against the player.
     """
@@ -63,20 +69,15 @@ def opponent_choose_place(role):
     if board[computer_move] == '.':
         board[computer_move] = computer_role.capitalize()
         create_board()
+        for a, b, c in [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]:
+            if computer_role.capitalize() == board[a] == board[b] == board[c]:
+                print(f'\n{computer_role.capitalize()} wins!')
+                playing = False
+                return playing
     elif '.' not in board:
         create_board()
     else:
-        opponent_choose_place(role)
-    check_winner(computer_role)
-
-
-def check_winner(role):
-    """
-    Checks if the board has a winner
-    """
-    for a, b, c in [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]:
-        if role.capitalize() == board[a] == board[b] == board[c]:
-            print(f'\n{role.capitalize()} wins!')
+        opponent_choose_place(role, playing)
 
 
 def main():
