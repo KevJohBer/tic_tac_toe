@@ -5,26 +5,29 @@ board = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
 WINNERS = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]
 PLAYING = True
 WINNER = False
+PLAYER1 = ''
+PLAYER2 = ''
 
 
 def role_select():
     """
     Let the user choose between playing as X or O.
     """
-    role = input('Would you like to play as x or o? ')
-    if role == 'x' or role == 'o':
-        print(f'You chose {role}\n')
+    global PLAYER1
+    PLAYER1 = input('Would you like to play as x or o? ').capitalize()
+    if PLAYER1 == 'X' or PLAYER1 == 'O':
+        print(f'You chose {PLAYER1}\n')
         create_board()
-        choose_place(role)
+        choose_place()
     else:
-        print(f'{role} is not a valid input.\n')
+        print(f'{PLAYER1} is not a valid input.\n')
         role_select()
-    return role
 
 
 def create_board():
     """
-    Creates a 3 x 3 playing field which the game will take place on.
+    Creates a 3 x 3 playing field which the game will take place on. Also
+    checks for wins or ties.
     """
     print(board[0:3])
     print()
@@ -32,63 +35,57 @@ def create_board():
     print()
     print(board[6:9])
 
+    global PLAYING, PLAYER1, PLAYER2, WINNERS
+    for a, b, c in WINNERS:
+        if (PLAYER1) == board[a] == board[b] == board[c]:
+            print(f'\n{PLAYER1} wins!')
+            PLAYING = False
+        elif (PLAYER2) == board[a] == board[b] == board[c]:
+            print(f'\n{PLAYER2} wins!')
+            PLAYING = False
 
-def choose_place(role):
+
+def choose_place():
     """
     Lets user decide where to place their mark.
     """
-    global PLAYING
-    global WINNER
+    global PLAYING, WINNER, PLAYER1
     while PLAYING:
         move = input('\nWhere will you place your mark? ')
         try:
             move = int(move) - 1
             if board[move] == '.':
-                board[move] = role.capitalize()
-                opponent_choose_place(role)
-                for a, b, c in WINNERS:
-                    if role.capitalize() == board[a] == board[b] == board[c]:
-                        print(f'\n{role.capitalize()} wins!')
-                        PLAYING = False
-                        WINNER = True
+                board[move] = PLAYER1.capitalize()
+                opponent_choose_place()
             elif (move > 8) or (move < 0):
                 print('Value must be between 1 and 9\n')
-            elif '.' not in board and not WINNER:
-                PLAYING = False
-                create_board()
-                print("\nIt's a tie!")
             elif board[move] != '.':
                 print(f'\n{move + 1} is already occupied')
         except ValueError:
             print(f'{move} is an invalid input')
 
 
-def opponent_choose_place(role):
+def opponent_choose_place():
     """
     Makes computer do a move against the player.
     """
-    global WINNER
-    global PLAYING
+    global WINNER, PLAYER1, PLAYER2, PLAYING
     computer_move = random.randint(0, 8)
-    if role == 'x':
-        computer_role = 'o'
-    elif role == 'o':
-        computer_role = 'x'
+    if PLAYER1 == 'X':
+        PLAYER2 = 'O'
+    elif PLAYER1 == 'O':
+        PLAYER2 = 'X'
 
-    if board[computer_move] == '.':
-        board[computer_move] = computer_role.capitalize()
-        create_board()
-        for a, b, c in WINNERS:
-            if computer_role.capitalize() == board[a] == board[b] == board[c]:
-                print(f'\n{computer_role.capitalize()} wins!')
-                PLAYING = False
-                WINNER = True
-    elif '.' not in board and not WINNER:
-        PLAYING = False
-        create_board()
-        print("\nIt's a tie!")
+    if '.' in board:
+        if board[computer_move] == '.':
+            board[computer_move] = PLAYER2
+            create_board()
+        else:
+            opponent_choose_place()
     else:
-        opponent_choose_place(role)
+        create_board()
+        print("\nit's a tie!")
+        PLAYING = False
 
 
 def main():
