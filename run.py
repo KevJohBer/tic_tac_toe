@@ -17,11 +17,11 @@ def role_select():
     Let the user choose between playing as X or O. X will always go first.
     """
     global PLAYER1, PLAYER2, PLAYING
-    PLAYER1 = input('Would you like to play as x or o? >').capitalize()
+    PLAYER1 = input('Would you like to play as x or o? > ').capitalize()
     if PLAYER1 == 'X' or 'O':
         print(f"""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-       You chose {PLAYER1}\n
+           You chose {PLAYER1}
 ooooooooooooooooooooooooooooooooooo
         """)
         if PLAYER1 == 'X':
@@ -47,6 +47,7 @@ def create_board():
     print(f'         {BOARD[3:6]}')
     print()
     print(f'         {BOARD[6:9]}')
+    print()
 
 
 def choose_place():
@@ -56,8 +57,19 @@ def choose_place():
     global BOARD, PLAYER1, PLAYING
     while PLAYING:
         create_board()
-        move = input('\nWhere will you place your mark? ')
-        try:
+        move = input('Where will you place your mark? > ')
+        if move == 'help':
+            print("""
+the playing field looks like this:
+        [1   2   3]
+        [4   5   6]
+        [7   8   9]
+so 1 is top left and 9 is bottom right and so on...
+
+Once you choose where to place your mark, the computer will
+set another one out and it will be your turn again.
+                    """)
+        else:
             move = int(move) - 1
             if BOARD[move] == '.':
                 BOARD[move] = PLAYER1
@@ -65,11 +77,9 @@ def choose_place():
                     check_winner(PLAYER1)
                 opponent_choose_place()
             elif (move > 8) or (move < 0):
-                print('Value must be between 1 and 9\n')
+                print('Value must be between 1 and 9\n Type "help" for instructions\n')
             elif BOARD[move] != '.':
-                print(f'\n{move + 1} is already occupied')
-        except ValueError:
-            print(f'{move} is an invalid input')
+                print(f'\n{move + 1} is already occupied\n')
     create_board()
     play_again()
 
@@ -119,7 +129,7 @@ def play_again():
     Allows the player to choose to play again or not
     """
     global BOARD, PLAYING, WINNER
-    try_again = input('\nWould you like to play again? ')
+    try_again = input('Would you like to play again? > ')
     while not PLAYING:
         if try_again == 'yes':
             BOARD = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
