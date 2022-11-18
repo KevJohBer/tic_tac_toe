@@ -58,18 +58,7 @@ def choose_place():
     while PLAYING:
         create_board()
         move = input('Choose a place between 1 and 9 > ')
-        if (move > '1') and (move < '9'):
-            move = int(move)
-            if BOARD[move] == '.':
-                BOARD[move] = PLAYER1
-                if not WINNER:
-                    check_winner(PLAYER1)
-                opponent_choose_place()
-            elif (move > 8) or (move < 0):
-                print('Value must be between 1 and 9\n Type "help" for instructions\n')
-            elif BOARD[move] != '.':
-                print(f'\n{move + 1} is already occupied\n')
-        elif move == 'help':
+        if move == 'help':
             print("""
 the playing field looks like this:
         [1   2   3]
@@ -81,7 +70,20 @@ Once you choose where to place your mark, the computer will
 set another one out and it will be your turn again.
                     """)
         else:
-            print('Value must be between 1 and 9\n Type "help" for instructions\n')
+            try:
+                move = int(move) - 1
+                if BOARD[move] == '.':
+                    BOARD[move] = PLAYER1
+                    if not WINNER:
+                        check_winner(PLAYER1)
+                    opponent_choose_place()
+                elif (move > 8) or (move < 0):
+                    print('Value must be between 1 and 9\n Type "help" for instructions\n')
+                elif BOARD[move] != '.':
+                    print(f'\n{move + 1} is already occupied\n')
+            except TypeError():
+                print(f'{move} is not a valid input, type "help" for instructions')
+
     create_board()
     play_again()
 
