@@ -18,7 +18,7 @@ def role_select():
     """
     global PLAYER1, PLAYER2, PLAYING
     PLAYER1 = input('Would you like to play as x or o? > ').capitalize()
-    if PLAYER1 == 'X' or 'O':
+    if PLAYER1 == ('X' or 'O'):
         print(f"""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
            You chose {PLAYER1}
@@ -57,8 +57,19 @@ def choose_place():
     global BOARD, PLAYER1, PLAYING
     while PLAYING:
         create_board()
-        move = input('Where will you place your mark? > ')
-        if move == 'help':
+        move = input('Choose a place between 1 and 9 > ')
+        if (move > '1') and (move < '9'):
+            move = int(move)
+            if BOARD[move] == '.':
+                BOARD[move] = PLAYER1
+                if not WINNER:
+                    check_winner(PLAYER1)
+                opponent_choose_place()
+            elif (move > 8) or (move < 0):
+                print('Value must be between 1 and 9\n Type "help" for instructions\n')
+            elif BOARD[move] != '.':
+                print(f'\n{move + 1} is already occupied\n')
+        elif move == 'help':
             print("""
 the playing field looks like this:
         [1   2   3]
@@ -70,16 +81,7 @@ Once you choose where to place your mark, the computer will
 set another one out and it will be your turn again.
                     """)
         else:
-            move = int(move) - 1
-            if BOARD[move] == '.':
-                BOARD[move] = PLAYER1
-                if not WINNER:
-                    check_winner(PLAYER1)
-                opponent_choose_place()
-            elif (move > 8) or (move < 0):
-                print('Value must be between 1 and 9\n Type "help" for instructions\n')
-            elif BOARD[move] != '.':
-                print(f'\n{move + 1} is already occupied\n')
+            print('Value must be between 1 and 9\n Type "help" for instructions\n')
     create_board()
     play_again()
 
