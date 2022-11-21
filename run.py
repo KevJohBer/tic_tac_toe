@@ -82,9 +82,33 @@ set another one out and it will be your turn again.
                     print(f'\n{move + 1} is already occupied\n')
             except:
                 print(f'{move} is not a valid input, type "help" for instructions')
-
     create_board()
     play_again()
+
+
+def minimax():
+    """minimax algorith to make AI generated moves"""
+    min_eval = 2
+    best_move = None
+
+    mpt_dots = []
+    for place in BOARD:
+        if place == '.':
+            mpt_dots += place
+
+    occ_place = 0
+    for place in BOARD:
+        if place != '.':
+            occ_place += 1
+    print(occ_place)
+
+    for dots in mpt_dots:
+        eval = occ_place
+        if eval > min_eval:
+            min_eval = eval
+            best_move = dots
+
+    return min_eval
 
 
 def opponent_choose_place():
@@ -92,14 +116,9 @@ def opponent_choose_place():
     Makes computer do a move against the player.
     """
     global PLAYER2, BOARD
-    computer_move = random.randint(0, 8)
+    computer_move = minimax()
 
-    mpt_dots = []
-    for place in BOARD:
-        if place == '.':
-            mpt_dots += place
-
-    if '.' in BOARD:      
+    if '.' in BOARD:
         if BOARD[computer_move] == '.':
             BOARD[computer_move] = PLAYER2
             if not WINNER:
