@@ -71,17 +71,16 @@ set another one out and it will be your turn again.
                     """)
         else:
             try:
-                move = int(move) - 1
+                if int(move) in range(1, 10):
+                    move = int(move) - 1
                 if BOARD[move] == '.':
                     BOARD[move] = PLAYER1
                     if not WINNER:
                         check_winner(PLAYER1)
                     opponent_choose_place()
-                elif (move > 8) or (move < 0):
-                    print('Value must be between 1 and 9\n Type "help" for instructions\n')
                 elif BOARD[move] != '.':
                     print(f'\n{move + 1} is already occupied\n')
-            except TypeError():
+            except:
                 print(f'{move} is not a valid input, type "help" for instructions')
 
     create_board()
@@ -95,7 +94,12 @@ def opponent_choose_place():
     global PLAYER2, BOARD
     computer_move = random.randint(0, 8)
 
-    if '.' in BOARD:
+    mpt_dots = []
+    for place in BOARD:
+        if place == '.':
+            mpt_dots += place
+
+    if '.' in BOARD:      
         if BOARD[computer_move] == '.':
             BOARD[computer_move] = PLAYER2
             if not WINNER:
