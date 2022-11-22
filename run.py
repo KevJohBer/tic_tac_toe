@@ -2,6 +2,7 @@
 import for usage of random functions
 """
 import random
+import copy
 
 
 BOARD = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
@@ -86,29 +87,52 @@ set another one out and it will be your turn again.
     play_again()
 
 
-def minimax():
-    """minimax algorith to make AI generated moves"""
-    min_eval = 2
-    best_move = None
+def minimax(case, maximizing):
+    global BOARD, WINNER
 
-    mpt_dots = []
-    for place in BOARD:
-        if place == '.':
-            mpt_dots += place
+    if case == 1:
+        return 1, None
+    elif case == -1:
+        return -1, None
+    elif case == 0:
+        return 0, None
 
-    occ_place = 0
-    for place in BOARD:
-        if place != '.':
+    if maximizing:
+        max_eval = -2
+        best_move = None
+
+        mpt_dots = []
+        for dots in BOARD:
+            if dots == '.':
+                mpt_dots.append(dots)
+
+        for dot in range(len(mpt_dots)):
+            temp = copy.deepcopy(BOARD)
+            temp[dot] = PLAYER1
+            eval = minimax(temp, False)[0]
+            if eval > max_eval:
+                max_eval = eval
+                best_move = dot
+        return best_move
+    elif not maximizing:
+        min_eval = 2
+        best_move = None
+
+        mpt_dots = []
+        for dots in BOARD:
+            if dots == '.':
+                mpt_dots.append(dots)
+
+        occ_place = 0
+        for dot in range(len(mpt_dots)):
+            temp = copy.deepcopy(BOARD)
+            temp[dot] = PLAYER2
             occ_place += 1
-    print(occ_place)
-
-    for dots in mpt_dots:
-        eval = occ_place
-        if eval > min_eval:
-            min_eval = eval
-            best_move = dots
-
-    return min_eval
+            eval = minimax(temp, True)[0]
+            if eval < min_eval:
+                min_eval = eval
+                best_move = dot
+        return best_move
 
 
 def opponent_choose_place():
@@ -116,7 +140,7 @@ def opponent_choose_place():
     Makes computer do a move against the player.
     """
     global PLAYER2, BOARD
-    computer_move = minimax()
+    computer_move = minimax(check_winner(PLAYER2), False)
 
     if '.' in BOARD:
         if BOARD[computer_move] == '.':
@@ -134,6 +158,7 @@ def check_winner(player):
     global PLAYING, WINNER
     for a, b, c in WINNERS:
         if (player) == BOARD[a] == BOARD[b] == BOARD[c]:
+            case = 0
             print(f"""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
              {player} wins!
@@ -141,6 +166,12 @@ ooooooooooooooooooooooooooooooooooo
             """)
             WINNER = True
             PLAYING = False
+            if player == PLAYER1:
+                case = 1
+                return case
+            elif player == PLAYER2:
+                case = -1
+                return case
 
     if ('.' not in BOARD) and (not WINNER):
         print("""
@@ -149,6 +180,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ooooooooooooooooooooooooooooooooooo
         """)
         PLAYING = False
+        return case
 
 
 def play_again():
