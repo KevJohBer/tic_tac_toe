@@ -87,6 +87,27 @@ set another one out and it will be your turn again.
     play_again()
 
 
+def get_empty_places():
+    """
+    Get all empty spots on the board
+    """
+    mpt_dots = []
+    for dots in BOARD:
+        if dots == '.':
+            mpt_dots.append(dots)
+    return mpt_dots
+
+
+def get_occ_place(dot, board):
+    """
+    gets all the occupied dots on the board
+    """
+    dots = 0
+    for place in board:
+        if place != '.':
+            dots += 1
+
+
 def minimax(case, maximizing):
     global BOARD, WINNER
 
@@ -100,39 +121,33 @@ def minimax(case, maximizing):
     if maximizing:
         max_eval = -2
         best_move = None
+        mpt_dots = get_empty_places()
 
-        mpt_dots = []
-        for dots in BOARD:
-            if dots == '.':
-                mpt_dots.append(dots)
-
-        for dot in range(len(mpt_dots)):
+        for dot in mpt_dots:
             temp = copy.deepcopy(BOARD)
-            temp[dot] = PLAYER1
+            temp.get_occ_place(dot)
             eval = minimax(temp, False)[0]
             if eval > max_eval:
                 max_eval = eval
                 best_move = dot
-        return best_move
+
+        return max_eval, best_move
+
     elif not maximizing:
         min_eval = 2
         best_move = None
+        mpt_dots = get_empty_places()
 
-        mpt_dots = []
-        for dots in BOARD:
-            if dots == '.':
-                mpt_dots.append(dots)
-
-        occ_place = 0
-        for dot in range(len(mpt_dots)):
+        for dot in mpt_dots:
             temp = copy.deepcopy(BOARD)
-            temp[dot] = PLAYER2
-            occ_place += 1
+            get_occ_place(dot, temp)
+            print(temp)
             eval = minimax(temp, True)[0]
             if eval < min_eval:
                 min_eval = eval
                 best_move = dot
-        return best_move
+
+        return min_eval, best_move
 
 
 def opponent_choose_place():
