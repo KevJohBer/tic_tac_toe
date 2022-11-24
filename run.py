@@ -31,7 +31,7 @@ ooooooooooooooooooooooooooooooooooo
             choose_place()
         elif PLAYER1 == 'O':
             PLAYER2 = 'X'
-            opponent_choose_place()
+            minimax(BOARD, False)
             choose_place()
     else:
         print(f'{PLAYER1} is not a valid input.\n')
@@ -78,8 +78,8 @@ set another one out and it will be your turn again.
                 if BOARD[move] == '.':
                     BOARD[move] = PLAYER1
                     if not WINNER:
-                        check_winner(PLAYER1)
-                    minimax(False)
+                        check_winner(BOARD, PLAYER1)
+                    minimax(BOARD, False)
                 elif BOARD[move] != '.':
                     print(f'\n{move + 1} is already occupied\n')
             except:
@@ -88,33 +88,48 @@ set another one out and it will be your turn again.
     play_again()
 
 
-def get_possible_moves():
+def get_possible_moves(board):
     possible_moves = []
-    for place in BOARD:
-        if place == '.':
+    for place in range(len(board)):
+        if BOARD[place] == '.':
             possible_moves.append(place)
     return possible_moves
 
 
-def minimax(maximizing):
+def make_move(move, player, board):
+    """
+    makes a move
+    """
+    if board[move] == '.':
+        board[move] = player
+    return board
+
+
+def minimax(board, maximizing):
     """
     Minimax algorithm
     """
-    if CASE == 1:
+
+    case = check_winner(board, PLAYER2)
+
+    if case == 1:
         return 1, None
-    elif CASE == -1:
+    elif case == -1:
         return -1, None
-    #elif CASE == 0:
-        #return 0, None
+    elif case == 0:
+        return 0, None
 
     if maximizing:
         max_score = -2
         best_move = None
-        for move in range(len(get_possible_moves())):
-            BOARD[move] = PLAYER1
-            print(BOARD)
-            score = minimax(False)
-            if (score < max_score):
+        possible_moves = get_possible_moves(board)
+
+        for move in possible_moves:
+            temp = copy.deepcopy(board)
+            make_move(move, PLAYER1, temp)
+            print(temp)
+            score = minimax(temp, False)
+            if score > max_score:
                 max_score = score
                 best_move = move
         return best_move
@@ -122,11 +137,13 @@ def minimax(maximizing):
     elif not maximizing:
         min_score = 2
         best_move = None
-        for move in range(len(get_possible_moves())):
-            opponent_choose_place(move)
-            print(BOARD)
-            score = minimax(True)
-            if (score > min_score):
+        possible_moves = get_possible_moves(board)
+
+        for move in possible_moves:
+            temp = copy.deepcopy(board)
+            make_move(move, PLAYER2, temp)
+            score = minimax(temp, True)
+            if score < min_score:
                 min_score = score
                 best_move = move
         return best_move
@@ -137,44 +154,36 @@ def opponent_choose_place(move):
     Makes computer do a move against the player.
     """
     global PLAYER2, BOARD
-    computer_move = move
 
-    if '.' in BOARD:
-        if BOARD[computer_move] == '.':
-            BOARD[computer_move] = PLAYER2
-            if not WINNER:
-                check_winner(PLAYER2)
-        else:
-            opponent_choose_place(move)
+    move = minimax(BOARD, False)
+
+    if BOARD[move] == '.':
+        BOARD[move] = PLAYER2
+        check_winner(BOARD, PLAYER2)
+    else:
+        move += 1
+        opponent_choose_place(move)
 
 
-def check_winner(player):
+def check_winner(board, player):
     """
     checks if there is a winner or tie
     """
     global PLAYING, WINNER, CASE
     for a, b, c in WINNERS:
         if (player) == BOARD[a] == BOARD[b] == BOARD[c]:
-            print(f"""
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-             {player} wins!
-ooooooooooooooooooooooooooooooooooo
-            """)
             WINNER = True
             PLAYING = False
+            create_board()
+            play_again()
 
             if player == PLAYER1:
-                CASE = -1
+                return -1
             elif player == PLAYER2:
-                CASE = 1
+                return 1        
 
     if ('.' not in BOARD) and (not WINNER):
-        print("""
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-           It's a tie!
-ooooooooooooooooooooooooooooooooooo
-        """)
-        PLAYING = False
+        return 0
 
 
 def play_again():
