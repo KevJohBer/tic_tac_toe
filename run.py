@@ -99,36 +99,27 @@ def get_possible_moves(board):
     return possible_moves
 
 
-def make_move(move, player, board):
-    """
-    makes a move
-    """
-    board[move] = player
-
-
 def minimax(board, player, maximizing):
     """
     Minimax algorithm
     """
+
     case = check_winner(board, player)
 
     if case == 1:
         return 1, None
-
     if case == -1:
         return -1, None
-
     if case == 0:
         return 0, None
 
     if maximizing:
-        max_score = -10
+        max_score = -2
         best_move = None
-        possible_moves = get_possible_moves(board)
 
-        for move in possible_moves:
+        for move in get_possible_moves(board):
             temp = copy.deepcopy(board)
-            make_move(move, PLAYER2, temp)
+            temp[move] = player
             score = minimax(temp, PLAYER1, False)[0]
             if score > max_score:
                 max_score = score
@@ -137,13 +128,18 @@ def minimax(board, player, maximizing):
         return max_score, best_move
 
     elif not maximizing:
-        min_score = 10
+        min_score = 2
         best_move = None
-        possible_moves = get_possible_moves(board)
 
-        for move in possible_moves:
+        for move in get_possible_moves(board):
             temp = copy.deepcopy(board)
-            make_move(move, PLAYER1, temp)
+            temp[move] = player
+            print()
+            print(temp[0:3])
+            print()
+            print(temp[3:6])
+            print()
+            print(temp[6:9])
             score = minimax(temp, PLAYER2, True)[0]
             if score < min_score:
                 min_score = score
@@ -157,9 +153,10 @@ def opponent_choose_place():
     Makes computer do a move against the player.
     """
     global PLAYER2, BOARD
-    bruh, move = minimax(BOARD, PLAYER2, True)
-    make_move(move, PLAYER2, BOARD)
-    print(f'ai has chosed to place their mark on {move} with an eval of {bruh}')
+
+    move = minimax(BOARD, PLAYER2, True)[1]
+    BOARD[move] = PLAYER2
+    check_winner(BOARD, PLAYER2)
 
 
 def check_winner(board, player):
@@ -169,17 +166,13 @@ def check_winner(board, player):
     global PLAYING, WINNER
 
     for a, b, c in WINNERS:
-        if '.' not in board:
-            return 0
-        else:
-            if (player) == board[a] == board[b] == board[c]:
-
-                if player == PLAYER1:
-                    return 1
-                elif player == PLAYER2:
-                    return -1
-                else:
-                    return 0
+        if (player) == board[a] == board[b] == board[c]:
+            if player == PLAYER1:
+                print(f'{player} Wins!')
+                return 1
+            elif player == PLAYER2:
+                print(f'{player} Wins!')
+                return -1
 
 
 def play_again():
