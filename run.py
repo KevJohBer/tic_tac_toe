@@ -20,7 +20,7 @@ def role_select():
     """
     global PLAYER1, PLAYER2, PLAYING
     PLAYER1 = input('Would you like to play as x or o? > ').capitalize()
-    if PLAYER1 == ('X' or 'O'):
+    if PLAYER1 == 'X' or 'O':
         print(f"""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
            You chose {PLAYER1}
@@ -31,8 +31,7 @@ ooooooooooooooooooooooooooooooooooo
             choose_place()
         elif PLAYER1 == 'O':
             PLAYER2 = 'X'
-            minimax(BOARD, PLAYER2, False)
-            choose_place()
+            opponent_choose_place()
     else:
         print(f'{PLAYER1} is not a valid input.\n')
         role_select()
@@ -93,13 +92,13 @@ def get_possible_moves(board):
     gets the indexes of all unmarked places
     """
     possible_moves = []
-    for place in range(0, 8):
+    for place in range(0, 9):
         if board[place] == '.':
             possible_moves.append(place)
     return possible_moves
 
 
-def minimax(board, player, maximizing):
+def minimax(board, maximizing):
     """
     Minimax algorithm
     """
@@ -108,9 +107,11 @@ def minimax(board, player, maximizing):
 
     if case == 1:
         return 1, None
-    if case == -1:
+
+    if case == 2:
         return -1, None
-    if case == 0:
+
+    elif '.' not in board:
         return 0, None
 
     if maximizing:
@@ -119,12 +120,11 @@ def minimax(board, player, maximizing):
 
         for move in get_possible_moves(board):
             temp = copy.deepcopy(board)
-            temp[move] = player
-            score = minimax(temp, PLAYER1, False)[0]
+            temp[move] = PLAYER1
+            score = minimax(temp, False)[0]
             if score > max_score:
                 max_score = score
                 best_move = move
-                print(best_move)
 
         return max_score, best_move
 
@@ -134,8 +134,8 @@ def minimax(board, player, maximizing):
 
         for move in get_possible_moves(board):
             temp = copy.deepcopy(board)
-            temp[move] = player
-            score = minimax(temp, PLAYER2, True)[0]
+            temp[move] = PLAYER2
+            score = minimax(temp, True)[0]
             if score < min_score:
                 min_score = score
                 best_move = move
@@ -148,8 +148,9 @@ def opponent_choose_place():
     Makes computer do a move against the player.
     """
     global PLAYER2, BOARD
-
-    move = minimax(BOARD, PLAYER2, True)[1]
+    print('computer making move...')
+    move = minimax(BOARD, False)[1]
+    print(f'computer chose to mark {move + 1}')
     BOARD[move] = PLAYER2
     check_winner(BOARD)
 
@@ -158,28 +159,13 @@ def check_winner(board):
     """
     checks if there is a winner or tie
     """
-    winner = False
-
-    print('----------------')
-    print(board[0:3])
-    print()
-    print(board[3:6])
-    print()
-    print(board[6:9])
-
     for a, b, c in WINNERS:
         if (PLAYER1) == board[a] == board[b] == board[c]:
-            winner = True
-            print(f'{PLAYER1} Wins!')
             return 1
         elif (PLAYER2) == board[a] == board[b] == board[c]:
-            winner = True
-            print(f'{PLAYER2} Wins!')
-            return -1
+            return 2
 
-    if '.' not in board and not winner:
-        print('no winner')
-        return 0
+    return 0
 
 
 def play_again():
