@@ -78,7 +78,7 @@ set another one out and it will be your turn again.
                 if BOARD[move] == '.':
                     BOARD[move] = PLAYER1
                     if not WINNER:
-                        check_winner(BOARD, PLAYER1)
+                        check_winner(BOARD)
                     opponent_choose_place()
                 elif BOARD[move] != '.':
                     print(f'\n{move + 1} is already occupied\n')
@@ -93,7 +93,7 @@ def get_possible_moves(board):
     gets the indexes of all unmarked places
     """
     possible_moves = []
-    for place in range(len(board)):
+    for place in range(0, 8):
         if board[place] == '.':
             possible_moves.append(place)
     return possible_moves
@@ -104,7 +104,7 @@ def minimax(board, player, maximizing):
     Minimax algorithm
     """
 
-    case = check_winner(board, player)
+    case = check_winner(board)
 
     if case == 1:
         return 1, None
@@ -124,6 +124,7 @@ def minimax(board, player, maximizing):
             if score > max_score:
                 max_score = score
                 best_move = move
+                print(best_move)
 
         return max_score, best_move
 
@@ -134,12 +135,6 @@ def minimax(board, player, maximizing):
         for move in get_possible_moves(board):
             temp = copy.deepcopy(board)
             temp[move] = player
-            print()
-            print(temp[0:3])
-            print()
-            print(temp[3:6])
-            print()
-            print(temp[6:9])
             score = minimax(temp, PLAYER2, True)[0]
             if score < min_score:
                 min_score = score
@@ -156,23 +151,35 @@ def opponent_choose_place():
 
     move = minimax(BOARD, PLAYER2, True)[1]
     BOARD[move] = PLAYER2
-    check_winner(BOARD, PLAYER2)
+    check_winner(BOARD)
 
 
-def check_winner(board, player):
+def check_winner(board):
     """
     checks if there is a winner or tie
     """
-    global PLAYING, WINNER
+    winner = False
+
+    print('----------------')
+    print(board[0:3])
+    print()
+    print(board[3:6])
+    print()
+    print(board[6:9])
 
     for a, b, c in WINNERS:
-        if (player) == board[a] == board[b] == board[c]:
-            if player == PLAYER1:
-                print(f'{player} Wins!')
-                return 1
-            elif player == PLAYER2:
-                print(f'{player} Wins!')
-                return -1
+        if (PLAYER1) == board[a] == board[b] == board[c]:
+            winner = True
+            print(f'{PLAYER1} Wins!')
+            return 1
+        elif (PLAYER2) == board[a] == board[b] == board[c]:
+            winner = True
+            print(f'{PLAYER2} Wins!')
+            return -1
+
+    if '.' not in board and not winner:
+        print('no winner')
+        return 0
 
 
 def play_again():
