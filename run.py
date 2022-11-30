@@ -1,7 +1,6 @@
 """
-import for usage of random functions
+import for copy function
 """
-import random
 import copy
 
 
@@ -11,27 +10,24 @@ PLAYING = True
 WINNER = False
 PLAYER1 = ''
 PLAYER2 = ''
-CASE = 0
-
 
 def role_select():
     """
     Let the user choose between playing as X or O. X will always go first.
     """
-    global PLAYER1, PLAYER2, PLAYING
+    global PLAYER1, PLAYER2
+
     PLAYER1 = input('Would you like to play as x or o? > ').capitalize()
-    if PLAYER1 == 'X' or 'O':
+
+    if PLAYER1 in ['X', 'O']:
         print(f"""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
            You chose {PLAYER1}
 ooooooooooooooooooooooooooooooooooo
         """)
-        if PLAYER1 == 'X':
-            PLAYER2 = 'O'
-            choose_place()
-        elif PLAYER1 == 'O':
-            PLAYER2 = 'X'
-            opponent_choose_place()
+        PLAYER1 = 'X' if PLAYER1 == 'X' else 'O'
+        PLAYER2 = 'O' if PLAYER1 == 'X' else 'X'
+        choose_place() if PLAYER1 == 'X' else opponent_choose_place()
     else:
         print(f'{PLAYER1} is not a valid input.\n')
         role_select()
@@ -42,7 +38,6 @@ def create_board():
     Creates a 3 x 3 playing field which the game will take place on. Also
     checks for wins or ties.
     """
-    global WINNER, PLAYING
     print(f'         {BOARD[0:3]}')
     print()
     print(f'         {BOARD[3:6]}')
@@ -56,33 +51,32 @@ def choose_place():
     Lets user decide where to place their mark.
     """
     global BOARD, PLAYER1, PLAYING
+
     while PLAYING:
         create_board()
-        move = input('Choose a place between 1 and 9 > ')
+        move = input('Choose a location between 1 and 9 > ')
         if move == 'help':
             print("""
-the playing field looks like this:
-        [1   2   3]
-        [4   5   6]
-        [7   8   9]
-so 1 is top left and 9 is bottom right and so on...
+The board looks like this:
+         [1     2     3]
 
-Once you choose where to place your mark, the computer will
-set another one out and it will be your turn again.
-                    """)
+         [4     5     6]
+
+         [7     8     9]
+Each location on the board has a corresponding number. 
+Top left being 1 and bottom right being 9 and so on.
+Once you make your move it will be the opponents turn.
+            """)
         else:
             try:
-                if int(move) in range(1, 10):
-                    move = int(move) - 1
+                move = int(move) - 1
                 if BOARD[move] == '.':
                     BOARD[move] = PLAYER1
-                    if not WINNER:
-                        check_winner(BOARD)
                     opponent_choose_place()
-                elif BOARD[move] != '.':
-                    print(f'\n{move + 1} is already occupied\n')
+                else:
+                    print('location occupied')
             except:
-                print(f'{move} is not a valid input, type "help" for instructions')
+                print(f'{move} is an invalid input, type "help" for instructions')
     create_board()
     play_again()
 
@@ -147,23 +141,44 @@ def opponent_choose_place():
     """
     Makes computer do a move against the player.
     """
-    global PLAYER2, BOARD
+    global PLAYER2, BOARD, PLAYING
+
     print('computer making move...')
     move = minimax(BOARD, False)[1]
-    print(f'computer chose to mark {move + 1}')
     BOARD[move] = PLAYER2
-    check_winner(BOARD)
+    print(f'computer chose to mark {move + 1}')
+    if check_winner(BOARD) in [1, 2]:
+        create_board()
+        PLAYING = False
+        play_again()
+    choose_place()
 
 
 def check_winner(board):
     """
     checks if there is a winner or tie
     """
+    global PLAYING
+
     for a, b, c in WINNERS:
         if (PLAYER1) == board[a] == board[b] == board[c]:
-            return 1
+            if board == BOARD:
+                print(f'{PLAYER1} wins!')
+                return 1
+            else:
+                return 1
         elif (PLAYER2) == board[a] == board[b] == board[c]:
-            return 2
+            if board == BOARD:
+                print(f'{PLAYER2} wins!')
+                return 2
+            else:
+                return 2
+
+    if '.' not in BOARD and not WINNER:
+        print("it's a tie!")
+        PLAYING = False
+        create_board()
+        play_again()
 
     return 0
 
