@@ -1,6 +1,7 @@
 """
-import for copy function
+import for copy and random function
 """
+import random
 import copy
 
 
@@ -10,6 +11,37 @@ PLAYING = True
 WINNER = False
 PLAYER1 = ''
 PLAYER2 = ''
+GAMEMODE = ''
+
+
+def gamemode():
+    """
+    Allows user to select the gamemode
+    """
+    global GAMEMODE, PLAYER1, PLAYER2
+
+    select = input("""
+Choose gamemode:
+a) normal
+b) impossible
+c) pvp
+>""")
+
+    if select == 'a':
+        GAMEMODE = 'a'
+    elif select == 'b':
+        GAMEMODE = 'b'
+    elif select == 'c':
+        GAMEMODE = 'c'
+        PLAYER1 = 'X'
+        PLAYER2 = 'O'
+        choose_place()
+    else:
+        print(f'{select} is not a valid input')
+        gamemode()
+
+    role_select()
+
 
 def role_select():
     """
@@ -72,6 +104,7 @@ Once you make your move it will be the opponents turn.
                 move = int(move) - 1
                 if BOARD[move] == '.':
                     BOARD[move] = PLAYER1
+                    check_winner(BOARD)
                     opponent_choose_place()
                 else:
                     print('location occupied')
@@ -139,19 +172,31 @@ def minimax(board, maximizing):
 
 def opponent_choose_place():
     """
-    Makes computer do a move against the player.
+    allows player2 to make a move
     """
     global PLAYER2, BOARD, PLAYING
 
-    print('computer making move...')
-    move = minimax(BOARD, False)[1]
-    BOARD[move] = PLAYER2
-    print(f'computer chose to mark {move + 1}')
-    if check_winner(BOARD) in [1, 2]:
-        create_board()
-        PLAYING = False
-        play_again()
-    choose_place()
+    # normal difficulty
+    if GAMEMODE == 'a':
+        move = random.choice(get_possible_moves(BOARD))
+        BOARD[move] = PLAYER2
+        check_winner(BOARD)
+    # impossible difficulty
+    elif GAMEMODE == 'b':
+        print('computer making move...')
+        move = minimax(BOARD, False)[1]
+        BOARD[move] = PLAYER2
+        print(f'computer chose to mark {move + 1}')
+    # pvp gamemode
+    elif GAMEMODE == 'c':
+        move = input('choose a location between 1 and 9 >')
+        try:
+            move = int(move) - 1
+            if BOARD[move] == '.':
+                BOARD[move] = PLAYER2
+                choose_place()
+        except:
+            print(f'{move} is an invalid input')
 
 
 def check_winner(board):
@@ -162,20 +207,32 @@ def check_winner(board):
 
     for a, b, c in WINNERS:
         if (PLAYER1) == board[a] == board[b] == board[c]:
+            WINNER = True
             if board == BOARD:
                 print(f'{PLAYER1} wins!')
+                create_board()
+                PLAYING = False
+                play_again()
                 return 1
             else:
                 return 1
         elif (PLAYER2) == board[a] == board[b] == board[c]:
+            WINNER = True
             if board == BOARD:
                 print(f'{PLAYER2} wins!')
+                create_board()
+                PLAYING = False
+                play_again()
                 return 2
             else:
                 return 2
 
     if '.' not in BOARD and not WINNER:
-        print("it's a tie!")
+        print("""
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+           It's a tie!
+ooooooooooooooooooooooooooooooooooo
+        """)
         PLAYING = False
         create_board()
         play_again()
@@ -208,4 +265,4 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ooooooooooooooooooooooooooooooooooo
 """)
 
-role_select()
+gamemode()
