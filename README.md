@@ -6,4 +6,11 @@ You choose wether you want to play as X or O, the objective is to place your mar
 
 [Here is the live version]()
 
-![multiple devices]()
+![app running on multiple devices](multipledevices.png)
+
+## How to play
+
+First, the game will ask you to pick one out of three gamemodes:
+* Normal
+* Impossible
+* PVP
