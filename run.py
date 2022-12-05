@@ -27,15 +27,12 @@ b) impossible
 c) pvp
 >""")
 
-    if select == 'a':
-        GAMEMODE = 'a'
-    elif select == 'b':
-        GAMEMODE = 'b'
-    elif select == 'c':
-        GAMEMODE = 'c'
-        PLAYER1 = 'X'
-        PLAYER2 = 'O'
-        choose_place()
+    if select in ['a', 'b', 'c']:
+        GAMEMODE = select
+        if GAMEMODE == 'c':
+            PLAYER1 = 'X'
+            PLAYER2 = 'O'
+            choose_place()
     else:
         print(f'{select} is not a valid input')
         gamemode()
@@ -78,6 +75,23 @@ def create_board():
     print()
 
 
+def instructions():
+    """
+    prints instructions on the console when called
+    """
+    print("""
+The board looks like this:
+         [1     2     3]
+
+         [4     5     6]
+
+         [7     8     9]
+Each location on the board has a corresponding number.
+Top left being 1 and bottom right being 9 and so on.
+Once you make your move it will be the opponents turn.
+            """)
+
+
 def choose_place():
     """
     Lets user decide where to place their mark.
@@ -88,22 +102,13 @@ def choose_place():
         create_board()
         move = input('Choose a location between 1 and 9 > ')
         if move == 'help':
-            print("""
-The board looks like this:
-         [1     2     3]
-
-         [4     5     6]
-
-         [7     8     9]
-Each location on the board has a corresponding number. 
-Top left being 1 and bottom right being 9 and so on.
-Once you make your move it will be the opponents turn.
-            """)
+            instructions()
         else:
             try:
-                move = int(move) - 1
-                if BOARD[move] == '.':
-                    BOARD[move] = PLAYER1
+                move = int(move)
+                if BOARD[move - 1] == '.':
+                    BOARD[move - 1] = PLAYER1
+                    create_board()
                     check_winner(BOARD)
                     opponent_choose_place()
                 else:
@@ -127,7 +132,8 @@ def get_possible_moves(board):
 
 def minimax(board, maximizing):
     """
-    Minimax algorithm
+    plays out possible end game scenarios and returns 
+    the winning moves
     """
 
     case = check_winner(board)
@@ -187,29 +193,38 @@ def opponent_choose_place():
         move = minimax(BOARD, False)[1]
         BOARD[move] = PLAYER2
         print(f'computer chose to mark {move + 1}')
+        check_winner(BOARD)
     # pvp gamemode
     elif GAMEMODE == 'c':
         move = input('choose a location between 1 and 9 >')
-        try:
-            move = int(move) - 1
-            if BOARD[move] == '.':
-                BOARD[move] = PLAYER2
-                choose_place()
-        except:
-            print(f'{move} is an invalid input')
+        if move == 'help':
+            instructions()
+        else:
+            try:
+                move = int(move) - 1
+                if BOARD[move] == '.':
+                    BOARD[move] = PLAYER2
+                    check_winner(BOARD)
+                    choose_place()
+            except:
+                print(f'{move} is an invalid input')
 
 
 def check_winner(board):
     """
     checks if there is a winner or tie
     """
-    global PLAYING
+    global PLAYING, WINNER
 
     for a, b, c in WINNERS:
         if (PLAYER1) == board[a] == board[b] == board[c]:
             WINNER = True
             if board == BOARD:
-                print(f'{PLAYER1} wins!')
+                print(F"""
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+              {PLAYER1} wins!
+ooooooooooooooooooooooooooooooooooo
+        """)
                 create_board()
                 PLAYING = False
                 play_again()
@@ -219,7 +234,11 @@ def check_winner(board):
         elif (PLAYER2) == board[a] == board[b] == board[c]:
             WINNER = True
             if board == BOARD:
-                print(f'{PLAYER2} wins!')
+                print(F"""
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+              {PLAYER2} wins!
+ooooooooooooooooooooooooooooooooooo
+        """)
                 create_board()
                 PLAYING = False
                 play_again()
@@ -227,7 +246,7 @@ def check_winner(board):
             else:
                 return 2
 
-    if '.' not in BOARD and not WINNER:
+    if '.' not in BOARD:
         print("""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
            It's a tie!
