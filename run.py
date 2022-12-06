@@ -34,9 +34,9 @@ Choose gamemode:
 a) normal
 b) impossible
 c) pvp
->""")
+>""").capitalize()
 
-    if select in ['a', 'b', 'c']:
+    if select in ['A', 'B', 'C']:
         GAMEMODE = select
         if GAMEMODE == 'c':
             PLAYER1 = 'X'
@@ -122,7 +122,7 @@ def choose_place():
                     opponent_choose_place()
                 else:
                     print('location occupied')
-            except:
+            except ValueError():
                 print(f'''
 {move} is an invalid input,
 type "help" for instructions''')
@@ -194,19 +194,20 @@ def opponent_choose_place():
     global PLAYER2, BOARD, PLAYING
 
     # normal difficulty
-    if GAMEMODE == 'a':
+    if GAMEMODE == 'A':
         move = random.choice(get_possible_moves(BOARD))
         BOARD[move] = PLAYER2
+        print(f'opponent chose to mark {move + 1}\n')
         check_winner(BOARD)
     # impossible difficulty
-    elif GAMEMODE == 'b':
+    elif GAMEMODE == 'B':
         print('computer making move...')
         move = minimax(BOARD, False)[1]
         BOARD[move] = PLAYER2
         print(f'computer chose to mark {move + 1}')
         check_winner(BOARD)
     # pvp gamemode
-    elif GAMEMODE == 'c':
+    elif GAMEMODE == 'C':
         move = input('choose a location between 1 and 9 >')
         if move == 'help':
             instructions()
