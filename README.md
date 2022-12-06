@@ -4,9 +4,9 @@ Tic tac toe is a classic board game that anyone can play. This version of tic ta
 
 You choose wether you want to play as X or O, the objective is to place your mark 3 squares in a row. In this python version you can choose to play against the computer or a friend. 
 
-[Here is the live version]()
+[Here is the live version](https://tic-tac-toe-kjb.herokuapp.com/)
 
-![app running on multiple devices](multipledevices.png)
+![app running on multiple devices](images/multipledevices.png)
 
 ## How to play
 
@@ -32,13 +32,18 @@ When you have picked a gamemode, you will be asked if you want to play as "X" or
 
 At the start of the game, you will be asked what gamemode you want to play. You can choose between "normal", "impossible" or "pvp".
 
+![game mode selection](images/gamemodeselection.png)
+
 ### Role Selection
 
 After you have selected a gamemode, you will be asked to play as "X" or "O". As a rule in tic tac toe, X will always go first, which is why there is no role select in the "PVP" mode.
 
+![role selection](images/xoro.png)
 ### Tic tac toe board
 
 When you have chosen the gamemode and role, there will be a 3x3 sized board printed on the terminal. Each location on the board is marked with a dot ".". each dot is indexed 1 to 9. You make moves by typing the indexes. The board detects when there is a winner and prints the outcome of the game out on the terminal, aswell as the board in it's end state. If you type anything other than an index from 1 to 9, an error message will print. The error message encourages you to type "help". If you type "help" on the terminal it will print instructions on the terminal.
+
+![tic tac toe board](images/tictactoeboard.png)
 
 ### Normal gamemode
 
@@ -55,6 +60,8 @@ In this gamemode, you play against a friend. "X" will be asked to make a move, a
 ### play again
 
 This feature is presented at the end of a game. The terminal asks you if you want to play again or not. If you type "yes", the game will restart with the same gamemode and difficulty that you previously chose, if you type "no" the game will exit entirely.
+
+![play again feature](images/playagain.png)
 
 ## Data model
 

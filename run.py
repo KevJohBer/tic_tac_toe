@@ -208,6 +208,7 @@ def opponent_choose_place():
                     choose_place()
             except:
                 print(f'{move} is an invalid input')
+                opponent_choose_place()
 
 
 def check_winner(board):
