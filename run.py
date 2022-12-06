@@ -6,7 +6,16 @@ import copy
 
 
 BOARD = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
-WINNERS = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]
+WINNERS = [
+    (0, 1, 2),
+    (3, 4, 5),
+    (6, 7, 8),
+    (0, 3, 6),
+    (1, 4, 7),
+    (2, 5, 8),
+    (0, 4, 8),
+    (2, 4, 6)
+    ]
 PLAYING = True
 WINNER = False
 PLAYER1 = ''
@@ -114,7 +123,9 @@ def choose_place():
                 else:
                     print('location occupied')
             except:
-                print(f'{move} is an invalid input, type "help" for instructions')
+                print(f'''
+{move} is an invalid input,
+type "help" for instructions''')
     create_board()
     play_again()
 
@@ -132,8 +143,8 @@ def get_possible_moves(board):
 
 def minimax(board, maximizing):
     """
-    plays out possible end game scenarios and returns 
-    the winning moves
+    plays out possible end game scenarios and
+    returns the winning moves
     """
 
     case = check_winner(board)

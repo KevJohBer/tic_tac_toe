@@ -77,8 +77,9 @@ I also tested it in the mock terminal in Heroku.
 
 There are no known bugs as of this time. 
 
-
 ### Validator testing
+
+
 
 ## Deployment
 
