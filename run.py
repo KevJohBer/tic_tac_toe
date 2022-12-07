@@ -28,15 +28,15 @@ c) pvp
 
     if select in ['A', 'B', 'C']:
         GAMEMODE = select
-        if GAMEMODE == 'c':
+        if GAMEMODE == 'C':
             PLAYER1 = 'X'
             PLAYER2 = 'O'
             choose_place()
+        else:
+            role_select()
     else:
         print(f'{select} is not a valid input')
         gamemode()
-
-    role_select()
 
 
 def role_select():
@@ -117,10 +117,10 @@ type "help" for instructions''')
                 check_winner(BOARD)
                 opponent_choose_place()
             else:
-                print('location occupied')
+                print('\nlocation occupied')
                 choose_place()
         else:
-            print('move needs to be between 1 and 9')
+            print('\nmove needs to be between 1 and 9')
             choose_place()
 
 
@@ -204,22 +204,26 @@ def opponent_choose_place():
         choose_place()
     # pvp gamemode
     elif GAMEMODE == 'C':
-        move = input('choose a location between 1 and 9 >')
+        move = input('\nchoose a location between 1 and 9 >')
         if move == 'help':
             instructions()
         else:
             try:
                 move = int(move) - 1
             except ValueError:
-                print(f'{move} is not a valid input')
+                print(f'\n{move} is not a valid input')
                 opponent_choose_place()
 
-            if BOARD[move] == '.':
-                BOARD[move] = PLAYER2
-                check_winner(BOARD)
-                choose_place()
+            if move >= 0 and move <= 8:
+                if BOARD[move] == '.':
+                    BOARD[move] = PLAYER2
+                    check_winner(BOARD)
+                    choose_place()
+                else:
+                    print('\nlocation occupied')
+                    opponent_choose_place()
             else:
-                print('location occupied')
+                print('\nMove needs to be between 1 and 9')
                 opponent_choose_place()
 
 
@@ -288,7 +292,10 @@ def play_again():
     if try_again == 'YES':
         BOARD = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
         WINNER = False
-        choose_place()
+        if PLAYER1 == 'O':
+            opponent_choose_place()
+        else:
+            choose_place()
     elif try_again == 'NO':
         print("""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

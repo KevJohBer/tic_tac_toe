@@ -2,7 +2,7 @@
 
 Tic tac toe is a classic board game that anyone can play. This version of tic tac toe is made with Python code. 
 
-You choose wether you want to play as X or O, the objective is to place your mark 3 squares in a row. In this python version you can choose to play against the computer or a friend. 
+Users can choose if they want to play against a computer or a friend. They win by placing 3 Xs or Os in a row. 
 
 [Here is the live version](https://tic-tac-toe-kjb.herokuapp.com/)
 
@@ -10,20 +10,20 @@ You choose wether you want to play as X or O, the objective is to place your mar
 
 ## How to play
 
-First, the game will ask you to pick one out of three gamemodes:
+First, the game will ask you to pick one of three gamemodes:
 * Normal
 
-    In the "Normal" gamemode you play against the computer and the computer makes completely randomized moves
+    In the "Normal" gamemode your opponent is a computer that makes randomized moves.
 
 * Impossible
 
-    In the "impossible" gamemode you play against the computer. The computer makes moves based on the minimax algorithm which will be explained later on.
+    In the "impossible" gamemode your opponent is a computer that makes moves based on an algorithm.
 
 * PVP
 
-    If the "normal" or "impossible" gamemode seem too easy or too difficult, then you can choose to play with a friend. In the "PVP" gamemode you take turns making moves. 
+    In the Player versus Player gamemode, you play with a friend.
 
-When you have picked a gamemode, you will be asked if you want to play as "X" or "O". (As a rule of Tic tac toe "X" will always make the first move.). When you have chosen between "X" or "O", the terminal will print a 3x3 board with 9 dots ".". Each dot is indexed 1 to 9. So 1 would be the top left dot and 9 would be the bottom right and so on. Once you have chosen your move. It will be the opponents turn. This will keep repeating until there is either a winner or a tie. At that point the game will ask you if you would like to play again or not. If you type "yes", the game will restart with the same gamemode and role that you previously chose. If you type "no", you will exit the game entirely. 
+When you have picked a gamemode, you will be asked if you want to be "X" or "O". ("X" will always make the first move.). When you have made your choice, the terminal will print a 3x3 board with 9 dots. Each dot is indexed 1 to 9. So 1 would be the top left and 9 would be the bottom right and so on. Once you have chosen your move. It will be the opponents turn. This will keep repeating until there is either a winner or a tie. At that point the game will ask you if you would like to play again or not. If you type "yes", the game will restart with the same gamemode and role that you previously chose. If you type "no", you will exit the game entirely. 
 
 
 ## Features
@@ -65,13 +65,17 @@ This feature is presented at the end of a game. The terminal asks you if you wan
 
 ## Data model
 
-Because of the simplicity of the game, I chose to use global variables as a model. The entire board is stored in a global variable aswell as the player roles.
+Because of the simplicity of the game, I chose to use global variables as a model. 
 
-I also store 2 boolean values in a global variables. They are if the game is over and if there is a winner. 
+The entire board is stored in a global variable aswell as the player roles. These are frequently used variables in the code, it is much easier to have them be global than to have to pass them between functions.
 
-The gamemode is also stored in a global varible.
+The global variable "WINNER" is used to signal game over and that there is a winner.
+
+The gamemode is also stored in a global varible to make sure the game sticks to whatever game mode the user chose at the beginning.
 
 ## Testing
+
+I have tried passing the code through a pep9 linter and finding no issues.
 
 I have manually tested the game by playing it and making sure that the game has no bugs if it is played as intended. 
 
@@ -81,14 +85,19 @@ I also tested it in the mock terminal in Heroku.
 
 ### Bugs
 
+There are no known bugs in the program.
+
 ### Unsolved bugs
 
-* The program does not exit properly when the user quits the game. This is because the choos
-
-* The exception in the choose_place function does want a type. I tried giving it valueError but it does not work.
+* Input crash for pvp - if the "O" player puts in a number that is too big, the game crashes
 
 ### Solved bugs
 
+* Input crash for pvp - if the "O" player puts in a number that is too big, the game crashes, I fixed this by limiting the size of the number that can be entered.
+
+* Exit crash - At game over, when asked to play again, the game would crash instead of exiting. I fixed this by using sys.exit() instead of just exit(). 
+
+* Exception TypeError - At the start of the game, when user makes a move. The game would crash if you typed letters. This is because I tried raising a ValueError() with brackets. This was finally resolved by simply removing the brackets. 
 
 ### Validator testing
 
