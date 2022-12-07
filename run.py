@@ -284,12 +284,12 @@ def play_again():
     """
     global BOARD, WINNER
 
-    try_again = input('\nWould you like to play again? yes or no > ')
-    if try_again == 'yes':
+    try_again = input('\nWould you like to play again? yes or no > ').upper()
+    if try_again == 'YES':
         BOARD = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
         WINNER = False
         choose_place()
-    elif try_again == 'no':
+    elif try_again == 'NO':
         print("""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
        Thank you for playing!
