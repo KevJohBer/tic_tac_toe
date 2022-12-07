@@ -9,17 +9,18 @@ Users can choose if they want to play against a computer or a friend. They win b
 ![app running on multiple devices](images/multipledevices.png)
 
 ## How to play
+---
 
 First, the game will ask you to pick one of three gamemodes:
-* Normal
+- **Normal**
 
     In the "Normal" gamemode your opponent is a computer that makes randomized moves.
 
-* Impossible
+- **Impossible**
 
     In the "impossible" gamemode your opponent is a computer that makes moves based on an algorithm.
 
-* PVP
+- **PVP**
 
     In the Player versus Player gamemode, you play with a friend.
 
@@ -27,6 +28,7 @@ When you have picked a gamemode, you will be asked if you want to be "X" or "O".
 
 
 ## Features
+---
 
 ### Gamemode selection
 
@@ -51,7 +53,7 @@ In this gamemode you play against the computer. The computer is making completel
 
 ### Impossible gamemode
 
-In this gamemode you play against the computer. The computer gets the moves from an algorithm called minimax. The idea of the algorithm is to play out all possible scenarios in which the computer itself won or tied the game out and follow the moves it made in order to win or tie. Making it quite literally impossible to beat the AI. It does this by looping through all possible moves in a copy of the tic tac toe board until it reaches an end scenario. These end scenarios return scores, -1 for losing, 0 for tie and 1 for winning. If the end scenarios return anything greater than -1 then the computer will choose this move as it has led to a win or tie. It is a well known algorithm and it took me a while to make it work so I will say I am quite proud of it :).
+In this gamemode you play against the computer. The computer gets the moves from an algorithm called minimax. The idea of the algorithm is to play out all possible scenarios in which the computer itself won or tied the game out and follow the moves it made in order to win or tie. Making it quite literally impossible to beat the AI. It does this by looping through all possible moves in a copy of the tic tac toe board until it reaches an end scenario. These end scenarios return scores, -1 for losing, 0 for tie and 1 for winning. If the end scenarios return anything greater than -1 then the computer will choose this move as it has led to a win or tie.
 
 ### PVP
 
@@ -65,7 +67,9 @@ This feature is presented at the end of a game. The terminal asks you if you wan
 
 ## Data model
 
-Because of the simplicity of the game, I chose to use global variables as a model. 
+---
+
+Because of the simplicity of the game, I chose to use **global** variables as a model. 
 
 The entire board is stored in a global variable aswell as the player roles. These are frequently used variables in the code, it is much easier to have them be global than to have to pass them between functions.
 
@@ -74,49 +78,45 @@ The global variable "WINNER" is used to signal game over and that there is a win
 The gamemode is also stored in a global varible to make sure the game sticks to whatever game mode the user chose at the beginning.
 
 ## Testing
+---
 
-I have tried passing the code through a pep9 linter and finding no issues.
-
-I have manually tested the game by playing it and making sure that the game has no bugs if it is played as intended. 
-
-I have also tried playing it as not intended, giving invalid input and making sure that it is handled in an intelligent way
-
-I also tested it in the mock terminal in Heroku.
+- I have tried passing the code through a pep8 linter and finding no issues. 
+- I have manually tested the game by playing it as intended.
+- I have manually tested the game by typing invalid input with no crashes.
+- I have tested it in the CI mock terminal in Heroku.
 
 ### Bugs
 
 There are no known bugs in the program.
 
-### Unsolved bugs
-
-* Input crash for pvp - if the "O" player puts in a number that is too big, the game crashes
-
 ### Solved bugs
 
-* Input crash for pvp - if the "O" player puts in a number that is too big, the game crashes, I fixed this by limiting the size of the number that can be entered.
+- Input crash for pvp - if the "O" player puts in a number that is too big, the game crashes, I fixed this by limiting the size of the number that can be entered.
 
-* Exit crash - At game over, when asked to play again, the game would crash instead of exiting. I fixed this by using sys.exit() instead of just exit(). 
+- Exit crash - At game over, when asked to play again, the game would crash instead of exiting. I fixed this by using sys.exit() instead of just exit(). 
 
-* Exception TypeError - At the start of the game, when user makes a move. The game would crash if you typed letters. This is because I tried raising a ValueError() with brackets. This was finally resolved by simply removing the brackets. 
+- Exception TypeError - At the start of the game, when user makes a move. The game would crash if you typed letters. This is because I tried raising a ValueError() with brackets. This was finally resolved by simply removing the brackets. 
 
 ### Validator testing
 
 The project has been tested in the pep8 validator and returned no errors. 
 
 ## Deployment
+---
 
 This project was deployed using Code Institutes mock terminal for Heroku.
 
-* Steps for deployment
+- Steps for deployment
     
-    * Fork or clone this repository
-    * Create a new heroku application
-    * Set buildbacks to python and NodeJS in that order 
-    * Link the Heroku app in the repository
-    * Click Deploy
+    - Fork or clone this repository
+    - Create a new heroku application
+    - Set buildbacks to python and NodeJS in that order 
+    - Link the Heroku app in the repository
+    - Click Deploy
 
 ## Credits
+---
 
-The minimax function was made with the help of a [tutorial](https://www.youtube.com/watch?v=Bk9hlNZc6sE)
+- The minimax function was made with the help of a [tutorial](https://www.youtube.com/watch?v=Bk9hlNZc6sE)
 
-The check_winner function was inspired by a [reddit thread](https://www.reddit.com/r/learnpython/comments/v8bscr/tic_tac_toe_win_condition/).
+- The check_winner function was inspired by a [reddit thread](https://www.reddit.com/r/learnpython/comments/v8bscr/tic_tac_toe_win_condition/).
