@@ -81,13 +81,14 @@ I also tested it in the mock terminal in Heroku.
 
 ### Bugs
 
-There are no known bugs as of this time. 
+### Unsolved bugs
+
+* The program does not exit properly when the user quits the game. This is because the choos
+
+* The exception in the choose_place function does want a type. I tried giving it valueError but it does not work.
 
 ### Solved bugs
 
-* 
-
-* 
 
 ### Validator testing
 

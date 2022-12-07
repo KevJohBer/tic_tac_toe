@@ -3,10 +3,10 @@ import for copy and random function
 """
 import random
 import copy
+import sys
 
 
 BOARD = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
-PLAYING = True
 WINNER = False
 PLAYER1 = ''
 PLAYER2 = ''
@@ -95,29 +95,33 @@ def choose_place():
     """
     Lets user decide where to place their mark.
     """
-    global BOARD, PLAYER1, PLAYING
+    global BOARD, PLAYER1
 
-    while PLAYING:
-        create_board()
-        move = input('Choose a location between 1 and 9 > ')
-        if move == 'help':
-            instructions()
-        else:
-            try:
-                move = int(move)
-                if BOARD[move - 1] == '.':
-                    BOARD[move - 1] = PLAYER1
-                    create_board()
-                    check_winner(BOARD)
-                    opponent_choose_place()
-                else:
-                    print('location occupied')
-            except ValueError():
-                print(f'''
+    create_board()
+    move = input('Choose a location between 1 and 9 > ')
+    if move == 'help':
+        instructions()
+    else:
+        try:
+            move = int(move) - 1
+        except:
+            print(f'''
 {move} is an invalid input,
 type "help" for instructions''')
-    create_board()
-    play_again()
+            choose_place()
+
+        if move <= 8 and move >= 0:
+            if BOARD[move] == '.':
+                BOARD[move] = PLAYER1
+                create_board()
+                check_winner(BOARD)
+                opponent_choose_place()
+            else:
+                print('location occupied')
+                choose_place()
+        else:
+            print('move needs to be between 1 and 9')
+            choose_place()
 
 
 def get_possible_moves(board):
@@ -181,7 +185,7 @@ def opponent_choose_place():
     """
     allows player2 to make a move
     """
-    global PLAYER2, BOARD, PLAYING
+    global PLAYER2, BOARD
 
     # normal difficulty
     if GAMEMODE == 'A':
@@ -189,6 +193,7 @@ def opponent_choose_place():
         BOARD[move] = PLAYER2
         print(f'opponent chose to mark {move + 1}\n')
         check_winner(BOARD)
+        choose_place()
     # impossible difficulty
     elif GAMEMODE == 'B':
         print('computer making move...')
@@ -196,6 +201,7 @@ def opponent_choose_place():
         BOARD[move] = PLAYER2
         print(f'computer chose to mark {move + 1}')
         check_winner(BOARD)
+        choose_place()
     # pvp gamemode
     elif GAMEMODE == 'C':
         move = input('choose a location between 1 and 9 >')
@@ -204,12 +210,16 @@ def opponent_choose_place():
         else:
             try:
                 move = int(move) - 1
-                if BOARD[move] == '.':
-                    BOARD[move] = PLAYER2
-                    check_winner(BOARD)
-                    choose_place()
             except:
-                print(f'{move} is an invalid input')
+                print(f'{move} is not a valid input')
+                opponent_choose_place()
+
+            if BOARD[move] == '.':
+                BOARD[move] = PLAYER2
+                check_winner(BOARD)
+                choose_place()
+            else:
+                print('location occupied')
                 opponent_choose_place()
 
 
@@ -217,7 +227,7 @@ def check_winner(board):
     """
     checks if there is a winner or tie
     """
-    global PLAYING, WINNER
+    global WINNER
 
     # winning end states
     winners = [
@@ -241,7 +251,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ooooooooooooooooooooooooooooooooooo
         """)
                 create_board()
-                PLAYING = False
                 play_again()
                 return 1
             else:
@@ -255,7 +264,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ooooooooooooooooooooooooooooooooooo
         """)
                 create_board()
-                PLAYING = False
                 play_again()
                 return 2
             else:
@@ -267,7 +275,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
            It's a tie!
 ooooooooooooooooooooooooooooooooooo
         """)
-        PLAYING = False
         create_board()
         play_again()
 
@@ -278,19 +285,19 @@ def play_again():
     """
     Allows the player to choose to play again or not
     """
-    global BOARD, PLAYING, WINNER
-    try_again = input('Would you like to play again? > ')
-    while not PLAYING:
-        if try_again == 'yes':
-            BOARD = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
-            PLAYING = True
-            WINNER = False
-            choose_place()
-        elif try_again == 'no':
-            exit()
-        else:
-            print(f'{try_again} is not a valid input')
-            play_again()
+    global BOARD, WINNER
+
+    try_again = input('Would you like to play again? yes or no > ')
+    if try_again == 'yes':
+        BOARD = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
+        WINNER = False
+        choose_place()
+    elif try_again == 'no':
+        print('Thank you for playing!')
+        sys.exit()
+    else:
+        print(f'{try_again} is an invalid input')
+        play_again()
 
 
 print("""
