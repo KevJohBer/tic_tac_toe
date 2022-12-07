@@ -65,6 +65,12 @@ This feature is presented at the end of a game. The terminal asks you if you wan
 
 ## Data model
 
+Because of the simplicity of the game, I chose to use global variables as a model. The entire board is stored in a global variable aswell as the player roles.
+
+I also store 2 boolean values in a global variables. They are if the game is over and if there is a winner. 
+
+The gamemode is also stored in a global varible.
+
 ## Testing
 
 I have manually tested the game by playing it and making sure that the game has no bugs if it is played as intended. 
@@ -77,9 +83,15 @@ I also tested it in the mock terminal in Heroku.
 
 There are no known bugs as of this time. 
 
+### Solved bugs
+
+* 
+
+* 
+
 ### Validator testing
 
-
+The project has been tested in the pep8 validator and returned no errors. 
 
 ## Deployment
 
@@ -95,6 +107,6 @@ This project was deployed using Code Institutes mock terminal for Heroku.
 
 ## Credits
 
-The minimax function was made with the help of a tutorial
+The minimax function was made with the help of a [tutorial](https://www.youtube.com/watch?v=Bk9hlNZc6sE)
 
-The check_winner function was inspired by a reddit thread.
+The check_winner function was inspired by a [reddit thread](https://www.reddit.com/r/learnpython/comments/v8bscr/tic_tac_toe_win_condition/).
