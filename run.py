@@ -45,14 +45,13 @@ def role_select():
     """
     global PLAYER1, PLAYER2
 
-    PLAYER1 = input('Would you like to play as x or o? > ').capitalize()
+    PLAYER1 = input('\nWould you like to play as x or o? > ').capitalize()
 
     if PLAYER1 in ['X', 'O']:
         print(f"""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
            You chose {PLAYER1}
-ooooooooooooooooooooooooooooooooooo
-        """)
+ooooooooooooooooooooooooooooooooooo""")
         PLAYER1 = 'X' if PLAYER1 == 'X' else 'O'
         PLAYER2 = 'O' if PLAYER1 == 'X' else 'X'
         choose_place() if PLAYER1 == 'X' else opponent_choose_place()
@@ -66,12 +65,12 @@ def create_board():
     Creates a 3 x 3 playing field which the game will take place on. Also
     checks for wins or ties.
     """
+    print()
     print(f'         {BOARD[0:3]}')
     print()
     print(f'         {BOARD[3:6]}')
     print()
     print(f'         {BOARD[6:9]}')
-    print()
 
 
 def instructions():
@@ -89,6 +88,7 @@ Each location on the board has a corresponding number.
 Top left being 1 and bottom right being 9 and so on.
 Once you make your move it will be the opponents turn.
             """)
+    choose_place()
 
 
 def choose_place():
@@ -98,13 +98,13 @@ def choose_place():
     global BOARD, PLAYER1
 
     create_board()
-    move = input('Choose a location between 1 and 9 > ')
+    move = input('\nChoose a location between 1 and 9 > ')
     if move == 'help':
         instructions()
     else:
         try:
             move = int(move) - 1
-        except:
+        except ValueError:
             print(f'''
 {move} is an invalid input,
 type "help" for instructions''')
@@ -191,15 +191,15 @@ def opponent_choose_place():
     if GAMEMODE == 'A':
         move = random.choice(get_possible_moves(BOARD))
         BOARD[move] = PLAYER2
-        print(f'opponent chose to mark {move + 1}\n')
+        print(f'\nopponent chose to mark {move + 1}')
         check_winner(BOARD)
         choose_place()
     # impossible difficulty
     elif GAMEMODE == 'B':
-        print('computer making move...')
+        print('\nopponent making move...')
         move = minimax(BOARD, False)[1]
         BOARD[move] = PLAYER2
-        print(f'computer chose to mark {move + 1}')
+        print(f'\nopponent chose to mark {move + 1}')
         check_winner(BOARD)
         choose_place()
     # pvp gamemode
@@ -210,7 +210,7 @@ def opponent_choose_place():
         else:
             try:
                 move = int(move) - 1
-            except:
+            except ValueError:
                 print(f'{move} is not a valid input')
                 opponent_choose_place()
 
@@ -248,8 +248,7 @@ def check_winner(board):
                 print(F"""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
               {PLAYER1} wins!
-ooooooooooooooooooooooooooooooooooo
-        """)
+ooooooooooooooooooooooooooooooooooo""")
                 create_board()
                 play_again()
                 return 1
@@ -261,8 +260,7 @@ ooooooooooooooooooooooooooooooooooo
                 print(F"""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
               {PLAYER2} wins!
-ooooooooooooooooooooooooooooooooooo
-        """)
+ooooooooooooooooooooooooooooooooooo""")
                 create_board()
                 play_again()
                 return 2
@@ -273,8 +271,7 @@ ooooooooooooooooooooooooooooooooooo
         print("""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
            It's a tie!
-ooooooooooooooooooooooooooooooooooo
-        """)
+ooooooooooooooooooooooooooooooooooo""")
         create_board()
         play_again()
 
@@ -287,13 +284,17 @@ def play_again():
     """
     global BOARD, WINNER
 
-    try_again = input('Would you like to play again? yes or no > ')
+    try_again = input('\nWould you like to play again? yes or no > ')
     if try_again == 'yes':
         BOARD = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
         WINNER = False
         choose_place()
     elif try_again == 'no':
-        print('Thank you for playing!')
+        print("""
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+       Thank you for playing!
+ooooooooooooooooooooooooooooooooooo
+""")
         sys.exit()
     else:
         print(f'{try_again} is an invalid input')
@@ -303,7 +304,6 @@ def play_again():
 print("""
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       Welcome to Tic Tac Toe!
-ooooooooooooooooooooooooooooooooooo
-""")
+ooooooooooooooooooooooooooooooooooo""")
 
 gamemode()
